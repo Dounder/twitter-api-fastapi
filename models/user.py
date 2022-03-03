@@ -11,5 +11,8 @@ class User(BaseModel):
     email: EmailStr = Field(...)
     first_name: str = Field(..., min_length=1, max_length=50)
     last_name: str = Field(..., min_length=1, max_length=50)
-    password: str = Field(..., min_length=8)
     user_id: UUID = Field(...)
+
+
+class UserLogin(User):
+    password: str = Field(..., min_length=8)
