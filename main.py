@@ -1,7 +1,8 @@
 # Python
+import json
 from typing import List
 # FastAPI
-from fastapi import FastAPI, status
+from fastapi import Body, FastAPI, status
 # Models
 from models.user import User
 from models.tweet import Tweet
@@ -10,6 +11,8 @@ app = FastAPI()
 
 # * Path Operations
 # ? Users
+
+
 @app.post(
     path='/auth/signup',
     response_model=User,
@@ -18,8 +21,19 @@ app = FastAPI()
     summary='Register a new user in the app',
     tags=['users']
 )
-def signup():
-    pass
+def signup(user: User = Body(...)):
+
+    with open('users.json', 'r+', encoding='utf-8') as f:
+        users = json.load(f)
+        user_dict = user.dict()
+        user_dict['user_id'] = str(user_dict['user_id']),
+        user_dict['birth_date'] = str(user_dict['birth_date'])
+        user_dict['password'] = str(user_dict['password'])
+        users.append(user_dict)
+        f.seek(0)
+        json.dump(users, f)
+        
+    return user
 
 
 @app.post(
@@ -82,6 +96,8 @@ def delete_user():
     pass
 
 # ? Tweets
+
+
 @app.get(
     path='/',
     response_model=List[Tweet],
@@ -98,7 +114,7 @@ def get_tweets():
     response_model=Tweet,
     status_code=status.HTTP_200_OK,
     summary='Get a specific tweet',
-    tags=['tweets']
+    tags=['Tweets']
 )
 def get_tweet():
     pass
